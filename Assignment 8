@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>News App</title>
+
+<style>
+body{
+font-family: Arial;
+background:#f4f4f4;
+text-align:center;
+margin:0;
+}
+
+h1{
+background:#222;
+color:white;
+padding:15px;
+}
+
+.topics{
+margin:20px;
+}
+
+button{
+padding:10px 15px;
+margin:5px;
+border:none;
+background:#0077ff;
+color:white;
+cursor:pointer;
+border-radius:5px;
+}
+
+button:hover{
+background:#0056cc;
+}
+
+#newsContainer{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:8px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+text-align:left;
+}
+
+.card img{
+width:100%;
+border-radius:5px;
+margin-bottom:10px;
+}
+
+.card a{
+text-decoration:none;
+color:#0077ff;
+font-weight:bold;
+}
+</style>
+
+</head>
+<body>
+
+<h1>News App</h1>
+
+<div class="topics">
+<button onclick="getNews('technology')">Technology</button>
+<button onclick="getNews('sports')">Sports</button>
+<button onclick="getNews('business')">Business</button>
+<button onclick="getNews('health')">Health</button>
+</div>
+
+<div id="newsContainer"></div>
+
+<script>
+
+const apiKey = "YOUR_API_KEY";
+const container = document.getElementById("newsContainer");
+
+async function getNews(topic="technology"){
+
+container.innerHTML = "Loading...";
+
+const url = `https://newsapi.org/v2/top-headlines?country=in&category=${topic}&apiKey=${apiKey}`;
+
+const response = await fetch(url);
+const data = await response.json();
+
+displayNews(data.articles);
+
+}
+
+function displayNews(articles){
+
+container.innerHTML = "";
+
+articles.forEach(article => {
+
+const news = document.createElement("div");
+news.className = "card";
+
+news.innerHTML = `
+<img src="${article.urlToImage || ''}">
+<h3>${article.title}</h3>
+<p>${article.description || ''}</p>
+<a href="${article.url}" target="_blank">Read More</a>
+`;
+
+container.appendChild(news);
+
+});
+
+}
+
+// default news on page load
+window.onload = () => {
+getNews();
+}
+
+</script>
+
+</body>
+</html>
